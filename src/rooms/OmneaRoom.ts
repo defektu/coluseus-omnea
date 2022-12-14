@@ -2,11 +2,9 @@ import { Room, Client } from "colyseus";
 import { OmneaRoomState, Player } from "./schema/OmneaRoomState";
 
 export class OmneaRoom extends Room<OmneaRoomState> {
-
-  maxClients = 30;
+  maxClients = 50;
 
   onCreate(options: any) {
-
     console.log(options);
     this.roomId = options.roomslug;
     this.setState(new OmneaRoomState());
@@ -26,6 +24,13 @@ export class OmneaRoom extends Room<OmneaRoomState> {
       player.ry = data["ry"];
       player.rz = data["rz"];
     });
+    this.onMessage("updateReaction", (client, data) => {
+      const player = this.state.players.get(client.sessionId);
+      player.reactionType = data["reactionType"];
+      console.log("reaction", data);
+      //console.log("update received -> ");
+      //console.debug(JSON.stringify(data));
+    });
     this.onMessage("global", (client, data) => {
       //console.log("update received -> ");
       //console.debug(JSON.stringify(data));
@@ -33,7 +38,6 @@ export class OmneaRoom extends Room<OmneaRoomState> {
     this.onMessage("message", function (client, message) {
       console.log(message);
     });
-
   }
 
   onJoin(client: Client, options: any) {
@@ -49,16 +53,17 @@ export class OmneaRoom extends Room<OmneaRoomState> {
     //newPlayer.z = Math.random() * 7.2 - 3.6;
     this.state.players.set(client.sessionId, newPlayer);
     const player = this.state.players.get(client.sessionId);
+    player.reactionType = -1;
     player.nickname = options.nickname;
     player.avatar = options.avatar;
     player.color1 = options.color1;
     player.color2 = options.color2;
     player.color3 = options.color3;
-    console.log(player.nickname);
-    console.log(player.avatar);
-    console.log(player.color1);
-    console.log(player.color2);
-    console.log(player.color3);
+    // console.log(player.nickname);
+    // console.log(player.avatar);
+    // console.log(player.color1);
+    // console.log(player.color2);
+    // console.log(player.color3);
 
     //this.state.players.set(client.sessionId, new Player());
     //client.userData = { nickname: options.nickname + client.sessionId };
@@ -74,5 +79,4 @@ export class OmneaRoom extends Room<OmneaRoomState> {
   onDispose() {
     console.log("room", this.roomId, "disposing...");
   }
-
 }

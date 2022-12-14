@@ -1,5 +1,4 @@
-import { Schema, type ,MapSchema} from "@colyseus/schema";
-
+import { MapSchema, Schema, type } from "@colyseus/schema";
 
 export class Player extends Schema {
   @type("string") nickname: string;
@@ -14,10 +13,9 @@ export class Player extends Schema {
   @type("number") ry: number;
   @type("number") rz: number;
   @type("number") rw: number;
+  @type("number") reactionType: number;
 }
 
-export class OmneaRoomState extends Schema {
-
+export class MyRoomState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>();
-
 }
