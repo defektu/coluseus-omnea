@@ -16,6 +16,6 @@ export class Player extends Schema {
   @type("number") reactionType: number;
 }
 
-export class MyRoomState extends Schema {
+export class OmneaRoomState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>();
 }
